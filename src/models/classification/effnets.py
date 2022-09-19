@@ -1,5 +1,5 @@
 import torch
-from geffnet import efficientnet_b0, efficientnet_lite0
+#from geffnet import efficientnet_b0, efficientnet_lite0
 
 from src.models.utils.abstract_model_wrapper import AbstractModelWrapper
 

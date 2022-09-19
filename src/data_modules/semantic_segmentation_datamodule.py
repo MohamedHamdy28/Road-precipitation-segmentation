@@ -11,9 +11,10 @@ from pydantic import validate_arguments
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset, Subset, random_split
 
-from src.data_modules.utils.stratified_split_optimizer import StratifiedSplitOptimizer
-from src.utils.helpers import parse_image_resolution_from_transforms
-from src.utils.typings import float_in_range, int_in_range, int_non_negative
+from data_modules.utils.stratified_split_optimizer import StratifiedSplitOptimizer
+from utils.helpers import parse_image_resolution_from_transforms
+from utils.typings import float_in_range, int_in_range, int_non_negative
+import sys
 
 
 class SemSegDataset(Dataset):
@@ -93,7 +94,7 @@ class SemanticSegmentationDataModule(LightningDataModule):
         shuffle_train: bool = True,
         shuffle_val: bool = False,
         drop_last: bool = False,
-        num_workers: int = os.cpu_count(),
+        num_workers: int = 0,
         pin_memory: bool = False,
         *args: Any,
         **kwargs: Any,
@@ -185,6 +186,8 @@ class SemanticSegmentationDataModule(LightningDataModule):
                     warnings.warn(
                         'Test split is set to 0, validation set will be used for testing'
                     )
+            else:
+                self.val_set = val_dataset
 
         if use_stratified_split and train_split > 0.0 and val_split > 0.0:
             split_ratios = [train_split, val_split]

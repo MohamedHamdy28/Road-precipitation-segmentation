@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.metrics.abstract_metric import AbstractMetric
+from metrics.abstract_metric import AbstractMetric
 
 
 class Precision(AbstractMetric):

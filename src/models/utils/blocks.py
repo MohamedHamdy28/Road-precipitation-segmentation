@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from timm.models.layers import Swish, create_conv2d, drop_path
 from timm.models.layers.helpers import make_divisible
 
-from src.models.utils.helpers import conv_output_shape
+from models.utils.helpers import conv_output_shape
 
 
 class ConvBlock(nn.Module):

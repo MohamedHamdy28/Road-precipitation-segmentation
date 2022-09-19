@@ -11,9 +11,9 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
 
-from src.data_modules.utils.helpers import SubsetWithTargets
-from src.utils.helpers import parse_image_resolution_from_transforms
-from src.utils.typings import float_in_range, int_non_negative
+from data_modules.utils.helpers import SubsetWithTargets
+from utils.helpers import parse_image_resolution_from_transforms
+from utils.typings import float_in_range, int_non_negative
 
 
 class ClassificationDataModule(LightningDataModule):

@@ -1,7 +1,7 @@
 from torch import nn
 
-from src.models.utils.abstract_model_wrapper import AbstractModelWrapper
-from src.models.utils.blocks import ConvBlock
+from models.utils.abstract_model_wrapper import AbstractModelWrapper
+from models.utils.blocks import ConvBlock
 
 
 class BITVehicleClassifierNet(AbstractModelWrapper):

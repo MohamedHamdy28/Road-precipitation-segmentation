@@ -3,7 +3,7 @@ from typing import Optional
 import torch
 import torch.nn as nn
 
-from src.losses.segmentation.dice_loss import DiceLoss
+from losses.segmentation.dice_loss import DiceLoss
 
 
 class ComboLoss(nn.Module):

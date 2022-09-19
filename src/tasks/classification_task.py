@@ -4,11 +4,11 @@ import numpy as np
 import pytorch_lightning as pl
 import torch
 
-from src.data_modules.classification_datamodule import ClassificationDataModule
-from src.metrics.confusion_matrix import ConfusionMatrix
-from src.registry import Registry
-from src.utils.config_validation import DEFAULT_CLASSIFICATION_LOSS, DEFAULT_OPTIMIZER, Config
-from src.utils.visualization import plot_confusion_matrix, visualize_batch
+from data_modules.classification_datamodule import ClassificationDataModule
+from metrics.confusion_matrix import ConfusionMatrix
+from registry import Registry
+from utils.config_validation import DEFAULT_CLASSIFICATION_LOSS, DEFAULT_OPTIMIZER, Config
+
 
 
 class ClassificationTask(pl.LightningModule):

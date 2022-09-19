@@ -5,7 +5,7 @@ from typing import List
 import yaml
 from albumentations import BasicTransform, CenterCrop, PadIfNeeded, RandomCrop, Resize
 
-from src.utils.typings import ImageResolution
+from utils.typings import ImageResolution
 
 PARSEABLE_TRANSFORMS = [CenterCrop, PadIfNeeded, RandomCrop, Resize]
 

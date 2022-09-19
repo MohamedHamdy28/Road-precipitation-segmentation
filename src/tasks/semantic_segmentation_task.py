@@ -3,13 +3,21 @@ import warnings
 import numpy as np
 import pytorch_lightning as pl
 import torch
+import matplotlib.pyplot as plt
+import sys
 
-from src.data_modules.semantic_segmentation_datamodule import SemanticSegmentationDataModule
-from src.registry import Registry
-from src.utils.config_validation import DEFAULT_OPTIMIZER, DEFAULT_SEGMENTATION_LOSS, Config
-from src.utils.visualization import visualize_batch
+from data_modules.semantic_segmentation_datamodule import SemanticSegmentationDataModule
+from registry import Registry
+from utils.config_validation import DEFAULT_OPTIMIZER, DEFAULT_SEGMENTATION_LOSS, Config
+from typing import List, Optional, Union
+from torchvision.utils import draw_bounding_boxes, make_grid
+import matplotlib.pyplot as plt
 
-
+def visualize_batch(img_batch: Union[torch.Tensor, List[torch.Tensor]]):
+    n_rows = int(np.sqrt(len(img_batch))) + 1
+    grid = make_grid(img_batch, nrow=n_rows).cpu().numpy()
+    plt.imshow(np.transpose(grid, (1, 2, 0)), interpolation='bilinear')
+    plt.show()
 class SemanticSegmentationTask(pl.LightningModule):
 
     def __init__(
@@ -63,6 +71,7 @@ class SemanticSegmentationTask(pl.LightningModule):
 
     def forward(self, x):
         return self.model(x)
+
 
     def training_step(self, batch, batch_idx):
         img, true = batch

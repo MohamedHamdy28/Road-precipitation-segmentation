@@ -1,21 +1,21 @@
 import logging
 from datetime import datetime
 from pathlib import Path
-
+import sys
 import pytorch_lightning as pl
 import torch
 from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import TensorBoardLogger
 
-from src.registry import Registry
-from src.utils.config_validation import Config
-from src.utils.helpers import create_config_parser
+from registry import Registry
+from utils.config_validation import Config
+from utils.helpers import create_config_parser
 
 
 def prepare_run(name, seed):
     pl.seed_everything(seed)
     all_runs_dir = Path('./runs')
-    date = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
+    date = datetime.now().strftime('%Y-%m-%d_%H_%M_%S')
     run_name = '_'.join([str(date), f'_{name}'])
     run_dir = all_runs_dir / run_name
     checkpoints_dir = run_dir / 'checkpoints'
@@ -85,13 +85,12 @@ def main(
     trainer = Trainer(
         **trainer_params,
         logger=logger,
-        callbacks=callbacks_list
+        callbacks=callbacks_list,
     )
-
+    
     # --- TRAINING ---
     if dm.train_set is not None:
         trainer.fit(task, datamodule=dm)
-
         # Restoring the best tracked model from checkpoint
         if checkpoint_callback is not None:
             model_state_dict = torch.load(checkpoint_callback.best_model_path)['state_dict']
@@ -125,7 +124,7 @@ def main(
             output_names=['output'],
             opset_version=opset_version
         )
-
+    torch.save(task.model.state_dict(), r"C:\Users\Electronica\Edge vision internship\prototype\Training Pipeline\saved_models\best.pt")
 
 if __name__ == '__main__':
     _, config = create_config_parser()

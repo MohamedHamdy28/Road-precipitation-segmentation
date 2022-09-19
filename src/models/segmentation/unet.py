@@ -1,7 +1,7 @@
 from torch import nn as nn
 
-from src.models.utils.abstract_model_wrapper import AbstractModelWrapper
-from src.models.utils.blocks import DoubleConv, Down, Up
+from models.utils.abstract_model_wrapper import AbstractModelWrapper
+from models.utils.blocks import DoubleConv, Down, Up
 
 
 class UNet(AbstractModelWrapper):

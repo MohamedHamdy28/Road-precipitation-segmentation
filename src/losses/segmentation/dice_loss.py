@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from src.losses.utils import one_hot
+from losses.utils import one_hot
 
 
 # based on:

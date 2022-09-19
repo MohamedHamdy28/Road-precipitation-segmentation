@@ -1,0 +1,106 @@
+
+run_params:
+  name: example_segmentation
+  seed: 1
+
+datamodule:
+  name: SemanticSegmentationDataModule
+  params:
+    images_dir: "./data/test"
+    masks_dir: "./data/test_1d_labels"
+    value_to_class_map:
+      0: background
+      1: wet
+      2: dry
+      3: other
+      4: snow
+
+    batch_size: 10
+    train_split: 0.05
+    val_split: 0.05
+    test_split: 0.9
+    shuffle_train: false
+    pin_memory: True
+
+test_transforms:
+  - name: ToFloat
+    params:
+      max_value: 255
+  - name: LongestMaxSize
+    params:
+      max_size: 256
+  - name: PadIfNeeded
+    params:
+      min_height: 256
+      min_width: 256
+      position: top_left
+      border_mode: 0
+      value: 0
+  - name: ToTensor
+train_transforms:
+  - name: ToFloat
+    params:
+      max_value: 255
+  - name: LongestMaxSize
+    params:
+      max_size: 256
+  - name: PadIfNeeded
+    params:
+      min_height: 256
+      min_width: 256
+      position: top_left
+      border_mode: 0
+      value: 0
+  - name: ToTensor
+
+val_transforms:
+  - name: ToFloat
+    params:
+      max_value: 255
+  - name: LongestMaxSize
+    params:
+      max_size: 256
+  - name: PadIfNeeded
+    params:
+      min_height: 256
+      min_width: 256
+      position: top_left
+      border_mode: 0
+      value: 0
+  - name: ToTensor
+
+task:
+  name: SemanticSegmentationTask
+  params:
+    visualize_first_batch: True
+    model:
+      name: UNet
+      params:
+        input_channels: 3
+        num_layers: 5
+        features_start: 32
+    loss:
+      name: CrossEntropyLoss
+    metrics:
+      - name: IoU
+    optimizer:
+      name: Adam
+      params:
+        lr: 0.001
+
+callbacks:
+  - name: ModelCheckpoint
+    params:
+      monitor: val_loss
+      mode: 'min'
+      verbose: True
+
+trainer_params:
+  max_epochs: 40
+  gpus: 1
+
+export_params:
+  output_name: example_segmentation
+  to_onnx: True
+
+

@@ -5,13 +5,17 @@ run_params:
 datamodule:
   name: SemanticSegmentationDataModule
   params:
-    images_dir: "/path/to/folder/with/images"
-    masks_dir: "/path/to/folder/with/masks"
+    images_dir: "./data/train_images"
+    masks_dir: "./data/train_labels"
+    test_images_path: "./data/test"
+    test_masks_path: "./data/test_1d_labels"
     value_to_class_map:
-      0: Background
-      1: Class1
-      2: Class2
-      3: Class3
+      0: background
+      1: wet
+      2: dry
+      3: other
+      4: snow
+
     batch_size: 8
     train_split: 0.8
     val_split: 0.1
@@ -51,6 +55,21 @@ val_transforms:
       value: 0
   - name: ToTensor
 
+test_transforms:
+  - name: ToFloat
+    params:
+      max_value: 255
+  - name: LongestMaxSize
+    params:
+      max_size: 256
+  - name: PadIfNeeded
+    params:
+      min_height: 256
+      min_width: 256
+      position: top_left
+      border_mode: 0
+      value: 0
+  - name: ToTensor
 
 task:
   name: SemanticSegmentationTask
@@ -61,7 +80,7 @@ task:
       params:
         input_channels: 3
         num_layers: 5
-        features_start: 64
+        features_start: 32
     loss:
       name: CrossEntropyLoss
     metrics:
@@ -79,7 +98,7 @@ callbacks:
       verbose: True
 
 trainer_params:
-  max_epochs: 1
+  max_epochs: 40
   gpus: 1
 
 export_params:

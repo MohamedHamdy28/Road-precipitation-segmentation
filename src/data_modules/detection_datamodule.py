@@ -11,8 +11,8 @@ from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset, Subset, random_split
 from torchvision.datasets import CocoDetection
 
-from src.utils.helpers import parse_image_resolution_from_transforms
-from src.utils.typings import float_in_range, int_non_negative
+from utils.helpers import parse_image_resolution_from_transforms
+from utils.typings import float_in_range, int_non_negative
 
 
 class CocoDetectionDatasetWrapper(Dataset):

@@ -6,11 +6,11 @@ import pytorch_lightning as pl
 import torch
 from ensemble_boxes import ensemble_boxes_wbf
 
-from src.data_modules.detection_datamodule import DetectionDataModule
-from src.metrics.coco_metrics import get_coco_stats
-from src.registry import Registry
-from src.utils.config_validation import DEFAULT_OPTIMIZER, Config
-from src.utils.visualization import visualize_with_boxes
+from data_modules.detection_datamodule import DetectionDataModule
+from metrics.coco_metrics import get_coco_stats
+from registry import Registry
+from utils.config_validation import DEFAULT_OPTIMIZER, Config
+
 
 
 def run_wbf(predictions, image_size=512, iou_thr=0.44, skip_box_thr=0.43, weights=None):

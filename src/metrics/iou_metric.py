@@ -1,4 +1,4 @@
-from src.metrics.abstract_metric import AbstractMetric
+from metrics.abstract_metric import AbstractMetric
 
 
 class IoUMetric(AbstractMetric):
