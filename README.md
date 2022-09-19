@@ -1,22 +1,85 @@
-# Training Pipeline for Computer Vision Neural Networks on Pytorch Lightning
+# Segmentation of road surface perceptions
 
-Training pipeline is a tool that helps automate the experiments with training neural
-networks for computer vision tasks, such us Image Classification and Object Detection.
-It implements the standard ways of training neural networks for Image Classification 
-and Object Detection on custom datasets. The training procedure is configured via `.yml`
-files, which provides a transparent overview of all parameters.
+This was my internship project at Edge vision. The task was to build an algorithm that classifies road images based on the condition of the surface. For example, if the ratio of “snow” pixels to all pixels which belong to the road surface exceeds a certain threshold (should be parameterized), the image is classified as “snow”.
 
-The code of training procedures is not universal - there are always some tweaks that
-you may want to try while training your models. You can easily extend the functionality
-thanks to the modular structure of the source code, which enables to add new models, losses, metrics,
-data parsers and even the whole tasks (Semantic Segmentation and Instance Segmentation are coming).
+## The steps followed:
+    1- Identify approach for road surface condition classification and research state of the art
+    2- Identify data annotation format
+    3- Prepare labeling instruction
+    4- Create an evaluation dataset
+    5- Label 100 training images
+    6- Data preprocessing
+    7- Train the prototype model
+    8- Demonstrate test model run files
 
-This repository is based on Pytorch Lightning: 
-https://github.com/PyTorchLightning/pytorch-lightning
+## Identify the approach and research state-of-the-art models
+Since we have to classify the images based on the ratio of the class to all pixels in the image, image segmentation is a reasonable choice.
+we started searching for previous solutions for road surface condition segmentation and found some research papers that tackle the same problem. Here is the literature review of some of the papers: https://drive.google.com/file/d/1xH8Ywu1wQfHCZDP4cPAknSNE6zbX5lEN/view?usp=sharing
 
-A lot of useful features and inspiration was taken from Ross Wightman's repositories:
-https://github.com/rwightman/gen-efficientnet-pytorch
-https://github.com/rwightman/efficientdet-pytorch
+## Identify data annotation format
+
+Annotation app used: Label studio
+
+Label interface used: Semantic segmentation with Polygons
+
+Labels: 
+- snow(0,145,225)
+- wet(255,55,0)
+- dry(129,96,49)
+- other(141,21,239)
+    
+Format of the labels: COCO
+
+## Prepare labeling instruction
+Labeling instructions file: https://drive.google.com/file/d/1kU1kAjzr7eXmxId-GibMuJvmCIdaUnHD/view?usp=sharing
+
+## Training and Evaluation datasets
+Can be found here:  https://drive.google.com/drive/folders/186LubNXsJoWMrgjsFXcYtNSaRtdyTPVa?usp=sharing
+
+## Data preprocessing
+The data preprocessing step that we did was to create RGB and 1-channel images for labels of the datasets. This can be done by running the mask_generator.py file.
+
+## Training and testing the model
+The training and testing steps were done using a training pipeline tool developed by Yaroslav Shumichénko. I would like to express my gratitude to him for letting me use his tool and his guidance throughout the internship. The tool: https://github.com/Jud1cator/training-pipeline
+
+The model used was: UNet
+
+### Snippets from Tensorboard while training
+![image](https://user-images.githubusercontent.com/71794972/191086207-46dc6276-43b1-4613-9a1c-8661a2e39244.png)
+![image](https://user-images.githubusercontent.com/71794972/191086355-170b3b37-211b-403b-b3e4-5945080ce762.png)
+![image](https://user-images.githubusercontent.com/71794972/191086373-4585644e-560b-4d2a-b9df-58e0d26fd4cd.png)
+
+IoU on the testing dataset = 0.796
+
+Description of parameters:
+- As we can notice from the graphs, we achieved the highest IoU and lowest loss values when we trained the model for 40 epochs. Also, we can see from the train_loss curve that the value of the loss starts to plateau after around 35 epochs
+
+- features_start=32 for 2 reasons:
+    1- I tested the model using features_start=16 and it produce higher loss and lower IoU, which means by increasing the number of feature_starting, will give             better results
+
+    2- I could not increase it more because I was training the model on my machine which has low GPU power 
+
+## Example of the output
+![image](https://user-images.githubusercontent.com/71794972/191086792-fa4ef267-f719-4468-be7b-008729b068cc.png)
+On the left, we have the input image, on the middle we have the ground truth, and on the right, we have the model prediction for each input.
+
+We can also have detailed information about the prediction for example:
+
+Image number 1:
+-Snow percentage 0.644
+-wet percentage 0.001
+-dry percentage 0.137
+-other percentage 0.027
+-background percentage 0.191
+
+## Confusion matrix for the test dataset:
+![image](https://user-images.githubusercontent.com/71794972/191086946-55e00c9b-212d-42bc-b3c3-9de9db0216c2.png)
+
+From the confusion matrix, we can notice that the model confuses between the:
+- wet and dry. This happens because there is a small number of wet images in the dataset 
+- dry and snow. This happens when there is strong light on the road which makes it looks more like snow
+
+These problems can be solved by collecting more images that contain both classes of confusion.
 
 ## Repository structure:
 
